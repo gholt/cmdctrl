@@ -9,11 +9,10 @@
 		cmdctrlsvc.proto
 
 	It has these top-level messages:
+		EmptyMsg
+		Ring
 		RingUpdateResult
 		StatsMsg
-		EmptyMsg
-		StatusMsg
-		Ring
 		HealthCheckMsg
 */
 package cmdctrlsvc
@@ -34,46 +33,45 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
-type RingUpdateResult struct {
-	Newversion int64 `protobuf:"varint,1,opt,name=newversion,proto3" json:"newversion,omitempty"`
-}
-
-func (m *RingUpdateResult) Reset()         { *m = RingUpdateResult{} }
-func (m *RingUpdateResult) String() string { return proto.CompactTextString(m) }
-func (*RingUpdateResult) ProtoMessage()    {}
-
-type StatsMsg struct {
-	Statsjson []byte `protobuf:"bytes,1,opt,name=statsjson,proto3" json:"statsjson,omitempty"`
-}
-
-func (m *StatsMsg) Reset()         { *m = StatsMsg{} }
-func (m *StatsMsg) String() string { return proto.CompactTextString(m) }
-func (*StatsMsg) ProtoMessage()    {}
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+const _ = proto.ProtoPackageIsVersion1
 
 type EmptyMsg struct {
 }
 
-func (m *EmptyMsg) Reset()         { *m = EmptyMsg{} }
-func (m *EmptyMsg) String() string { return proto.CompactTextString(m) }
-func (*EmptyMsg) ProtoMessage()    {}
-
-type StatusMsg struct {
-	Status bool   `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
-	Msg    string `protobuf:"bytes,2,opt,name=msg,proto3" json:"msg,omitempty"`
-}
-
-func (m *StatusMsg) Reset()         { *m = StatusMsg{} }
-func (m *StatusMsg) String() string { return proto.CompactTextString(m) }
-func (*StatusMsg) ProtoMessage()    {}
+func (m *EmptyMsg) Reset()                    { *m = EmptyMsg{} }
+func (m *EmptyMsg) String() string            { return proto.CompactTextString(m) }
+func (*EmptyMsg) ProtoMessage()               {}
+func (*EmptyMsg) Descriptor() ([]byte, []int) { return fileDescriptorCmdctrlsvc, []int{0} }
 
 type Ring struct {
 	Version int64  `protobuf:"varint,1,opt,name=version,proto3" json:"version,omitempty"`
 	Ring    []byte `protobuf:"bytes,2,opt,name=ring,proto3" json:"ring,omitempty"`
 }
 
-func (m *Ring) Reset()         { *m = Ring{} }
-func (m *Ring) String() string { return proto.CompactTextString(m) }
-func (*Ring) ProtoMessage()    {}
+func (m *Ring) Reset()                    { *m = Ring{} }
+func (m *Ring) String() string            { return proto.CompactTextString(m) }
+func (*Ring) ProtoMessage()               {}
+func (*Ring) Descriptor() ([]byte, []int) { return fileDescriptorCmdctrlsvc, []int{1} }
+
+type RingUpdateResult struct {
+	Newversion int64 `protobuf:"varint,1,opt,name=newversion,proto3" json:"newversion,omitempty"`
+}
+
+func (m *RingUpdateResult) Reset()                    { *m = RingUpdateResult{} }
+func (m *RingUpdateResult) String() string            { return proto.CompactTextString(m) }
+func (*RingUpdateResult) ProtoMessage()               {}
+func (*RingUpdateResult) Descriptor() ([]byte, []int) { return fileDescriptorCmdctrlsvc, []int{2} }
+
+type StatsMsg struct {
+	Stats []byte `protobuf:"bytes,1,opt,name=stats,proto3" json:"stats,omitempty"`
+}
+
+func (m *StatsMsg) Reset()                    { *m = StatsMsg{} }
+func (m *StatsMsg) String() string            { return proto.CompactTextString(m) }
+func (*StatsMsg) ProtoMessage()               {}
+func (*StatsMsg) Descriptor() ([]byte, []int) { return fileDescriptorCmdctrlsvc, []int{3} }
 
 type HealthCheckMsg struct {
 	Status bool   `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
@@ -81,16 +79,16 @@ type HealthCheckMsg struct {
 	Ts     int64  `protobuf:"varint,3,opt,name=ts,proto3" json:"ts,omitempty"`
 }
 
-func (m *HealthCheckMsg) Reset()         { *m = HealthCheckMsg{} }
-func (m *HealthCheckMsg) String() string { return proto.CompactTextString(m) }
-func (*HealthCheckMsg) ProtoMessage()    {}
+func (m *HealthCheckMsg) Reset()                    { *m = HealthCheckMsg{} }
+func (m *HealthCheckMsg) String() string            { return proto.CompactTextString(m) }
+func (*HealthCheckMsg) ProtoMessage()               {}
+func (*HealthCheckMsg) Descriptor() ([]byte, []int) { return fileDescriptorCmdctrlsvc, []int{4} }
 
 func init() {
+	proto.RegisterType((*EmptyMsg)(nil), "cmdctrlsvc.EmptyMsg")
+	proto.RegisterType((*Ring)(nil), "cmdctrlsvc.Ring")
 	proto.RegisterType((*RingUpdateResult)(nil), "cmdctrlsvc.RingUpdateResult")
 	proto.RegisterType((*StatsMsg)(nil), "cmdctrlsvc.StatsMsg")
-	proto.RegisterType((*EmptyMsg)(nil), "cmdctrlsvc.EmptyMsg")
-	proto.RegisterType((*StatusMsg)(nil), "cmdctrlsvc.StatusMsg")
-	proto.RegisterType((*Ring)(nil), "cmdctrlsvc.Ring")
 	proto.RegisterType((*HealthCheckMsg)(nil), "cmdctrlsvc.HealthCheckMsg")
 }
 
@@ -101,12 +99,8 @@ var _ grpc.ClientConn
 // Client API for CmdCtrl service
 
 type CmdCtrlClient interface {
+	Stop(ctx context.Context, in *EmptyMsg, opts ...grpc.CallOption) (*EmptyMsg, error)
 	RingUpdate(ctx context.Context, in *Ring, opts ...grpc.CallOption) (*RingUpdateResult, error)
-	Reload(ctx context.Context, in *EmptyMsg, opts ...grpc.CallOption) (*StatusMsg, error)
-	Restart(ctx context.Context, in *EmptyMsg, opts ...grpc.CallOption) (*StatusMsg, error)
-	Start(ctx context.Context, in *EmptyMsg, opts ...grpc.CallOption) (*StatusMsg, error)
-	Stop(ctx context.Context, in *EmptyMsg, opts ...grpc.CallOption) (*StatusMsg, error)
-	Exit(ctx context.Context, in *EmptyMsg, opts ...grpc.CallOption) (*StatusMsg, error)
 	Stats(ctx context.Context, in *EmptyMsg, opts ...grpc.CallOption) (*StatsMsg, error)
 	HealthCheck(ctx context.Context, in *EmptyMsg, opts ...grpc.CallOption) (*HealthCheckMsg, error)
 }
@@ -119,44 +113,8 @@ func NewCmdCtrlClient(cc *grpc.ClientConn) CmdCtrlClient {
 	return &cmdCtrlClient{cc}
 }
 
-func (c *cmdCtrlClient) RingUpdate(ctx context.Context, in *Ring, opts ...grpc.CallOption) (*RingUpdateResult, error) {
-	out := new(RingUpdateResult)
-	err := grpc.Invoke(ctx, "/cmdctrlsvc.CmdCtrl/RingUpdate", in, out, c.cc, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *cmdCtrlClient) Reload(ctx context.Context, in *EmptyMsg, opts ...grpc.CallOption) (*StatusMsg, error) {
-	out := new(StatusMsg)
-	err := grpc.Invoke(ctx, "/cmdctrlsvc.CmdCtrl/Reload", in, out, c.cc, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *cmdCtrlClient) Restart(ctx context.Context, in *EmptyMsg, opts ...grpc.CallOption) (*StatusMsg, error) {
-	out := new(StatusMsg)
-	err := grpc.Invoke(ctx, "/cmdctrlsvc.CmdCtrl/Restart", in, out, c.cc, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *cmdCtrlClient) Start(ctx context.Context, in *EmptyMsg, opts ...grpc.CallOption) (*StatusMsg, error) {
-	out := new(StatusMsg)
-	err := grpc.Invoke(ctx, "/cmdctrlsvc.CmdCtrl/Start", in, out, c.cc, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *cmdCtrlClient) Stop(ctx context.Context, in *EmptyMsg, opts ...grpc.CallOption) (*StatusMsg, error) {
-	out := new(StatusMsg)
+func (c *cmdCtrlClient) Stop(ctx context.Context, in *EmptyMsg, opts ...grpc.CallOption) (*EmptyMsg, error) {
+	out := new(EmptyMsg)
 	err := grpc.Invoke(ctx, "/cmdctrlsvc.CmdCtrl/Stop", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
@@ -164,9 +122,9 @@ func (c *cmdCtrlClient) Stop(ctx context.Context, in *EmptyMsg, opts ...grpc.Cal
 	return out, nil
 }
 
-func (c *cmdCtrlClient) Exit(ctx context.Context, in *EmptyMsg, opts ...grpc.CallOption) (*StatusMsg, error) {
-	out := new(StatusMsg)
-	err := grpc.Invoke(ctx, "/cmdctrlsvc.CmdCtrl/Exit", in, out, c.cc, opts...)
+func (c *cmdCtrlClient) RingUpdate(ctx context.Context, in *Ring, opts ...grpc.CallOption) (*RingUpdateResult, error) {
+	out := new(RingUpdateResult)
+	err := grpc.Invoke(ctx, "/cmdctrlsvc.CmdCtrl/RingUpdate", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -194,66 +152,14 @@ func (c *cmdCtrlClient) HealthCheck(ctx context.Context, in *EmptyMsg, opts ...g
 // Server API for CmdCtrl service
 
 type CmdCtrlServer interface {
+	Stop(context.Context, *EmptyMsg) (*EmptyMsg, error)
 	RingUpdate(context.Context, *Ring) (*RingUpdateResult, error)
-	Reload(context.Context, *EmptyMsg) (*StatusMsg, error)
-	Restart(context.Context, *EmptyMsg) (*StatusMsg, error)
-	Start(context.Context, *EmptyMsg) (*StatusMsg, error)
-	Stop(context.Context, *EmptyMsg) (*StatusMsg, error)
-	Exit(context.Context, *EmptyMsg) (*StatusMsg, error)
 	Stats(context.Context, *EmptyMsg) (*StatsMsg, error)
 	HealthCheck(context.Context, *EmptyMsg) (*HealthCheckMsg, error)
 }
 
 func RegisterCmdCtrlServer(s *grpc.Server, srv CmdCtrlServer) {
 	s.RegisterService(&_CmdCtrl_serviceDesc, srv)
-}
-
-func _CmdCtrl_RingUpdate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error) (interface{}, error) {
-	in := new(Ring)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	out, err := srv.(CmdCtrlServer).RingUpdate(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func _CmdCtrl_Reload_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error) (interface{}, error) {
-	in := new(EmptyMsg)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	out, err := srv.(CmdCtrlServer).Reload(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func _CmdCtrl_Restart_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error) (interface{}, error) {
-	in := new(EmptyMsg)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	out, err := srv.(CmdCtrlServer).Restart(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func _CmdCtrl_Start_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error) (interface{}, error) {
-	in := new(EmptyMsg)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	out, err := srv.(CmdCtrlServer).Start(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func _CmdCtrl_Stop_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error) (interface{}, error) {
@@ -268,12 +174,12 @@ func _CmdCtrl_Stop_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return out, nil
 }
 
-func _CmdCtrl_Exit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error) (interface{}, error) {
-	in := new(EmptyMsg)
+func _CmdCtrl_RingUpdate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error) (interface{}, error) {
+	in := new(Ring)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
-	out, err := srv.(CmdCtrlServer).Exit(ctx, in)
+	out, err := srv.(CmdCtrlServer).RingUpdate(ctx, in)
 	if err != nil {
 		return nil, err
 	}
@@ -309,28 +215,12 @@ var _CmdCtrl_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*CmdCtrlServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "RingUpdate",
-			Handler:    _CmdCtrl_RingUpdate_Handler,
-		},
-		{
-			MethodName: "Reload",
-			Handler:    _CmdCtrl_Reload_Handler,
-		},
-		{
-			MethodName: "Restart",
-			Handler:    _CmdCtrl_Restart_Handler,
-		},
-		{
-			MethodName: "Start",
-			Handler:    _CmdCtrl_Start_Handler,
-		},
-		{
 			MethodName: "Stop",
 			Handler:    _CmdCtrl_Stop_Handler,
 		},
 		{
-			MethodName: "Exit",
-			Handler:    _CmdCtrl_Exit_Handler,
+			MethodName: "RingUpdate",
+			Handler:    _CmdCtrl_RingUpdate_Handler,
 		},
 		{
 			MethodName: "Stats",
@@ -342,6 +232,55 @@ var _CmdCtrl_serviceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams: []grpc.StreamDesc{},
+}
+
+func (m *EmptyMsg) Marshal() (data []byte, err error) {
+	size := m.Size()
+	data = make([]byte, size)
+	n, err := m.MarshalTo(data)
+	if err != nil {
+		return nil, err
+	}
+	return data[:n], nil
+}
+
+func (m *EmptyMsg) MarshalTo(data []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	return i, nil
+}
+
+func (m *Ring) Marshal() (data []byte, err error) {
+	size := m.Size()
+	data = make([]byte, size)
+	n, err := m.MarshalTo(data)
+	if err != nil {
+		return nil, err
+	}
+	return data[:n], nil
+}
+
+func (m *Ring) MarshalTo(data []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Version != 0 {
+		data[i] = 0x8
+		i++
+		i = encodeVarintCmdctrlsvc(data, i, uint64(m.Version))
+	}
+	if m.Ring != nil {
+		if len(m.Ring) > 0 {
+			data[i] = 0x12
+			i++
+			i = encodeVarintCmdctrlsvc(data, i, uint64(len(m.Ring)))
+			i += copy(data[i:], m.Ring)
+		}
+	}
+	return i, nil
 }
 
 func (m *RingUpdateResult) Marshal() (data []byte, err error) {
@@ -382,95 +321,12 @@ func (m *StatsMsg) MarshalTo(data []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.Statsjson != nil {
-		if len(m.Statsjson) > 0 {
+	if m.Stats != nil {
+		if len(m.Stats) > 0 {
 			data[i] = 0xa
 			i++
-			i = encodeVarintCmdctrlsvc(data, i, uint64(len(m.Statsjson)))
-			i += copy(data[i:], m.Statsjson)
-		}
-	}
-	return i, nil
-}
-
-func (m *EmptyMsg) Marshal() (data []byte, err error) {
-	size := m.Size()
-	data = make([]byte, size)
-	n, err := m.MarshalTo(data)
-	if err != nil {
-		return nil, err
-	}
-	return data[:n], nil
-}
-
-func (m *EmptyMsg) MarshalTo(data []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	return i, nil
-}
-
-func (m *StatusMsg) Marshal() (data []byte, err error) {
-	size := m.Size()
-	data = make([]byte, size)
-	n, err := m.MarshalTo(data)
-	if err != nil {
-		return nil, err
-	}
-	return data[:n], nil
-}
-
-func (m *StatusMsg) MarshalTo(data []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if m.Status {
-		data[i] = 0x8
-		i++
-		if m.Status {
-			data[i] = 1
-		} else {
-			data[i] = 0
-		}
-		i++
-	}
-	if len(m.Msg) > 0 {
-		data[i] = 0x12
-		i++
-		i = encodeVarintCmdctrlsvc(data, i, uint64(len(m.Msg)))
-		i += copy(data[i:], m.Msg)
-	}
-	return i, nil
-}
-
-func (m *Ring) Marshal() (data []byte, err error) {
-	size := m.Size()
-	data = make([]byte, size)
-	n, err := m.MarshalTo(data)
-	if err != nil {
-		return nil, err
-	}
-	return data[:n], nil
-}
-
-func (m *Ring) MarshalTo(data []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if m.Version != 0 {
-		data[i] = 0x8
-		i++
-		i = encodeVarintCmdctrlsvc(data, i, uint64(m.Version))
-	}
-	if m.Ring != nil {
-		if len(m.Ring) > 0 {
-			data[i] = 0x12
-			i++
-			i = encodeVarintCmdctrlsvc(data, i, uint64(len(m.Ring)))
-			i += copy(data[i:], m.Ring)
+			i = encodeVarintCmdctrlsvc(data, i, uint64(len(m.Stats)))
+			i += copy(data[i:], m.Stats)
 		}
 	}
 	return i, nil
@@ -542,6 +398,27 @@ func encodeVarintCmdctrlsvc(data []byte, offset int, v uint64) int {
 	data[offset] = uint8(v)
 	return offset + 1
 }
+func (m *EmptyMsg) Size() (n int) {
+	var l int
+	_ = l
+	return n
+}
+
+func (m *Ring) Size() (n int) {
+	var l int
+	_ = l
+	if m.Version != 0 {
+		n += 1 + sovCmdctrlsvc(uint64(m.Version))
+	}
+	if m.Ring != nil {
+		l = len(m.Ring)
+		if l > 0 {
+			n += 1 + l + sovCmdctrlsvc(uint64(l))
+		}
+	}
+	return n
+}
+
 func (m *RingUpdateResult) Size() (n int) {
 	var l int
 	_ = l
@@ -554,42 +431,8 @@ func (m *RingUpdateResult) Size() (n int) {
 func (m *StatsMsg) Size() (n int) {
 	var l int
 	_ = l
-	if m.Statsjson != nil {
-		l = len(m.Statsjson)
-		if l > 0 {
-			n += 1 + l + sovCmdctrlsvc(uint64(l))
-		}
-	}
-	return n
-}
-
-func (m *EmptyMsg) Size() (n int) {
-	var l int
-	_ = l
-	return n
-}
-
-func (m *StatusMsg) Size() (n int) {
-	var l int
-	_ = l
-	if m.Status {
-		n += 2
-	}
-	l = len(m.Msg)
-	if l > 0 {
-		n += 1 + l + sovCmdctrlsvc(uint64(l))
-	}
-	return n
-}
-
-func (m *Ring) Size() (n int) {
-	var l int
-	_ = l
-	if m.Version != 0 {
-		n += 1 + sovCmdctrlsvc(uint64(m.Version))
-	}
-	if m.Ring != nil {
-		l = len(m.Ring)
+	if m.Stats != nil {
+		l = len(m.Stats)
 		if l > 0 {
 			n += 1 + l + sovCmdctrlsvc(uint64(l))
 		}
@@ -625,6 +468,156 @@ func sovCmdctrlsvc(x uint64) (n int) {
 }
 func sozCmdctrlsvc(x uint64) (n int) {
 	return sovCmdctrlsvc(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *EmptyMsg) Unmarshal(data []byte) error {
+	l := len(data)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowCmdctrlsvc
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := data[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: EmptyMsg: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: EmptyMsg: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipCmdctrlsvc(data[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthCmdctrlsvc
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Ring) Unmarshal(data []byte) error {
+	l := len(data)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowCmdctrlsvc
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := data[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Ring: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Ring: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Version", wireType)
+			}
+			m.Version = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCmdctrlsvc
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				m.Version |= (int64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Ring", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCmdctrlsvc
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := data[iNdEx]
+				iNdEx++
+				byteLen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthCmdctrlsvc
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Ring = append(m.Ring[:0], data[iNdEx:postIndex]...)
+			if m.Ring == nil {
+				m.Ring = []byte{}
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipCmdctrlsvc(data[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthCmdctrlsvc
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
 }
 func (m *RingUpdateResult) Unmarshal(data []byte) error {
 	l := len(data)
@@ -726,7 +719,7 @@ func (m *StatsMsg) Unmarshal(data []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Statsjson", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Stats", wireType)
 			}
 			var byteLen int
 			for shift := uint(0); ; shift += 7 {
@@ -750,258 +743,9 @@ func (m *StatsMsg) Unmarshal(data []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Statsjson = append(m.Statsjson[:0], data[iNdEx:postIndex]...)
-			if m.Statsjson == nil {
-				m.Statsjson = []byte{}
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipCmdctrlsvc(data[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthCmdctrlsvc
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *EmptyMsg) Unmarshal(data []byte) error {
-	l := len(data)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowCmdctrlsvc
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := data[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: EmptyMsg: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: EmptyMsg: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		default:
-			iNdEx = preIndex
-			skippy, err := skipCmdctrlsvc(data[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthCmdctrlsvc
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *StatusMsg) Unmarshal(data []byte) error {
-	l := len(data)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowCmdctrlsvc
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := data[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: StatusMsg: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: StatusMsg: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
-			}
-			var v int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowCmdctrlsvc
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := data[iNdEx]
-				iNdEx++
-				v |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.Status = bool(v != 0)
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Msg", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowCmdctrlsvc
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := data[iNdEx]
-				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthCmdctrlsvc
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Msg = string(data[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipCmdctrlsvc(data[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthCmdctrlsvc
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *Ring) Unmarshal(data []byte) error {
-	l := len(data)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowCmdctrlsvc
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := data[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: Ring: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: Ring: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Version", wireType)
-			}
-			m.Version = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowCmdctrlsvc
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := data[iNdEx]
-				iNdEx++
-				m.Version |= (int64(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Ring", wireType)
-			}
-			var byteLen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowCmdctrlsvc
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := data[iNdEx]
-				iNdEx++
-				byteLen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if byteLen < 0 {
-				return ErrInvalidLengthCmdctrlsvc
-			}
-			postIndex := iNdEx + byteLen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Ring = append(m.Ring[:0], data[iNdEx:postIndex]...)
-			if m.Ring == nil {
-				m.Ring = []byte{}
+			m.Stats = append(m.Stats[:0], data[iNdEx:postIndex]...)
+			if m.Stats == nil {
+				m.Stats = []byte{}
 			}
 			iNdEx = postIndex
 		default:
@@ -1247,3 +991,27 @@ var (
 	ErrInvalidLengthCmdctrlsvc = fmt.Errorf("proto: negative length found during unmarshaling")
 	ErrIntOverflowCmdctrlsvc   = fmt.Errorf("proto: integer overflow")
 )
+
+var fileDescriptorCmdctrlsvc = []byte{
+	// 306 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0x12, 0x48, 0xce, 0x4d, 0x49,
+	0x2e, 0x29, 0xca, 0x29, 0x2e, 0x4b, 0xd6, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x42, 0x88,
+	0x28, 0x71, 0x71, 0x71, 0xb8, 0xe6, 0x16, 0x94, 0x54, 0xfa, 0x16, 0xa7, 0x2b, 0x99, 0x70, 0xb1,
+	0x04, 0x65, 0xe6, 0xa5, 0x0b, 0x49, 0x70, 0xb1, 0x97, 0xa5, 0x16, 0x15, 0x67, 0xe6, 0xe7, 0x49,
+	0x30, 0x2a, 0x30, 0x6a, 0x30, 0x07, 0xc1, 0xb8, 0x42, 0x42, 0x5c, 0x2c, 0x45, 0x40, 0x15, 0x12,
+	0x4c, 0x40, 0x61, 0x9e, 0x20, 0x30, 0x5b, 0xc9, 0x88, 0x4b, 0x00, 0xa4, 0x2b, 0xb4, 0x20, 0x25,
+	0xb1, 0x24, 0x35, 0x28, 0xb5, 0xb8, 0x34, 0xa7, 0x44, 0x48, 0x8e, 0x8b, 0x2b, 0x2f, 0xb5, 0x1c,
+	0xd5, 0x10, 0x24, 0x11, 0x25, 0x05, 0x2e, 0x8e, 0xe0, 0x92, 0xc4, 0x92, 0x62, 0xa0, 0xad, 0x42,
+	0x22, 0x5c, 0xac, 0xc5, 0x20, 0x36, 0x58, 0x19, 0x4f, 0x10, 0x84, 0xa3, 0xe4, 0xc5, 0xc5, 0xe7,
+	0x91, 0x9a, 0x98, 0x53, 0x92, 0xe1, 0x9c, 0x91, 0x9a, 0x9c, 0x0d, 0x52, 0x27, 0xc6, 0xc5, 0x06,
+	0x92, 0x2a, 0x85, 0x28, 0xe4, 0x08, 0x82, 0xf2, 0x84, 0x04, 0xb8, 0x98, 0x73, 0x8b, 0x21, 0x4e,
+	0xe2, 0x0c, 0x02, 0x31, 0x85, 0xf8, 0xb8, 0x98, 0x80, 0xc6, 0x31, 0x83, 0x6d, 0x05, 0xb2, 0x8c,
+	0x7e, 0x32, 0x72, 0xb1, 0x3b, 0xe7, 0xa6, 0x38, 0x03, 0xbd, 0x2c, 0x04, 0xf4, 0x63, 0x70, 0x49,
+	0x7e, 0x81, 0x90, 0x88, 0x1e, 0x52, 0xb0, 0xc0, 0x42, 0x40, 0x0a, 0xab, 0xa8, 0x12, 0x83, 0x90,
+	0x1d, 0x17, 0x17, 0xc2, 0x8f, 0x42, 0x02, 0xc8, 0xaa, 0x40, 0xe2, 0x52, 0x32, 0xe8, 0x22, 0xc8,
+	0xa1, 0x01, 0xd4, 0x6f, 0xca, 0xc5, 0x0a, 0xf6, 0x2f, 0x31, 0xd6, 0xc2, 0x02, 0x06, 0xa8, 0xcd,
+	0x91, 0x8b, 0x1b, 0x29, 0x10, 0x70, 0x68, 0x96, 0x42, 0x16, 0x45, 0x0d, 0x33, 0x25, 0x06, 0x27,
+	0x81, 0x13, 0x8f, 0xe4, 0x18, 0x2f, 0x00, 0xf1, 0x03, 0x20, 0x9e, 0xf1, 0x58, 0x8e, 0x21, 0x89,
+	0x0d, 0x9c, 0x08, 0x8c, 0x01, 0x01, 0x00, 0x00, 0xff, 0xff, 0x67, 0x6a, 0xe1, 0xaf, 0x18, 0x02,
+	0x00, 0x00,
+}

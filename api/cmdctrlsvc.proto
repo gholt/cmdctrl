@@ -3,14 +3,17 @@ syntax = "proto3";
 package cmdctrlsvc;
 
 service CmdCtrl {
+    rpc Stop(EmptyMsg) returns (EmptyMsg) {}
     rpc RingUpdate(Ring) returns (RingUpdateResult) {}
-    rpc Reload(EmptyMsg) returns (StatusMsg) {}
-    rpc Restart(EmptyMsg) returns (StatusMsg) {}
-    rpc Start(EmptyMsg) returns (StatusMsg) {}
-    rpc Stop(EmptyMsg) returns (StatusMsg) {}
-    rpc Exit(EmptyMsg) returns (StatusMsg) {}
     rpc Stats(EmptyMsg) returns (StatsMsg) {}
     rpc HealthCheck(EmptyMsg) returns (HealthCheckMsg) {}
+}
+
+message EmptyMsg {}
+
+message Ring {
+    int64 version = 1;
+    bytes ring = 2;
 }
 
 message RingUpdateResult {
@@ -18,19 +21,7 @@ message RingUpdateResult {
 }
 
 message StatsMsg {
-    bytes statsjson = 1;
-}
-
-message EmptyMsg {}
-
-message StatusMsg {
-    bool status = 1;
-    string msg = 2;
-}
-
-message Ring {
-    int64 version = 1;
-    bytes ring = 2;
+    bytes stats = 1;
 }
 
 message HealthCheckMsg {
